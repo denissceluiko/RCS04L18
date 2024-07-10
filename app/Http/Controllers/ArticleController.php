@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Article;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ArticleController extends Controller
 {
@@ -16,7 +17,6 @@ class ArticleController extends Controller
         $articles = Article::all();
 
         return view('article.index', compact('articles'));
-        // return view('layouts.landing', compact('articles'));
     }
 
     /**
@@ -32,9 +32,19 @@ class ArticleController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'title' => 'required|min:15|max:70|unique:articles,title',
+            'article_photo' => 'image',
+            'body' => 'required',
+        ]);
+
+        if ($request->hasFile('article_photo')) {
+            $path = $request->article_photo->store('images', 'public');
+        }
+
         Article::create([
             'title' => $request->get('title'),
-            'image_url' => $request->get('image_url'),
+            'image_url' => $path ?? '',
             'body' => $request->get('body'),
         ]);
 
@@ -62,9 +72,30 @@ class ArticleController extends Controller
      */
     public function update(Request $request, Article $article)
     {
+        $request->validate([
+            'title' => 'required|min:15|max:70|unique:articles,title,'.$article->id,
+            'article_photo' => 'image',
+            'body' => 'required',
+        ]);
+
+        if ($request->hasFile('article_photo')) {
+            $path = $request->article_photo->store('images', 'public');
+
+            Storage::disk('public')->delete($article->image_url);
+        }
+
+        if ($request->hasFile('article_document')) {
+            $path = $request->article_document->store('articles', 'documents');
+
+            $article->documents()->create([
+                'disk' => 'documents',
+                'path' => $path,
+            ]);
+        }
+
         $article->update([
             'title' => $request->get('title'),
-            'image_url' => $request->get('image_url'),
+            'image_url' => $path ?? '',
             'body' => $request->get('body'),
         ]);
 
@@ -76,6 +107,16 @@ class ArticleController extends Controller
      */
     public function destroy(Article $article)
     {
+        foreach($article->documents as $document)
+        {
+            if (Storage::disk($document->disk)->exists($document->path)) {
+                Storage::disk($document->disk)->delete($document->path);
+            }
+
+            $document->delete();
+        }
+
+        Storage::disk('public')->delete($article->image_url);
         $article->delete();
 
         return redirect()->route('article.index');

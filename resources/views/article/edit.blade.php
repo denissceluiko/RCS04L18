@@ -8,7 +8,7 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <form class="p-6" method="post" action="{{ route('article.update', $article) }}">
+                <form class="p-6" method="post" action="{{ route('article.update', $article) }}" enctype="multipart/form-data">
                     @csrf
                     @method('patch')
                     <div class="space-y-12">
@@ -19,21 +19,30 @@
                           <div class="col-span-full">
                             <label for="title" class="block text-sm font-medium leading-6 text-gray-900">@lang('Title')</label>
                             <div class="mt-2">
-                                <input type="text" name="title" id="title" value="{{ $article->title }}" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                <input type="text" name="title" id="title" value="{{ $article->title }}" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset  @error('title') ring-red-500 @else ring-gray-300 @enderror placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                             </div>
+                            @error('title')
+                                <div class="text-sm text-red-700">{{ $message }}</div>
+                            @enderror
                           </div>
 
                           <div class="col-span-full">
-                            <label for="image_url" class="block text-sm font-medium leading-6 text-gray-900">@lang('Image URL')</label>
-                            <div class="mt-2">
-                                <input type="text" name="image_url" id="image_url" value="{{ $article->image_url }}" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                            </div>
+                            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="user_avatar">@lang('Upload photo')</label>
+                            <input class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" type="file" name="article_photo">
+                          </div>
+
+                          <div class="col-span-full">
+                            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="user_avatar">@lang('Upload document')</label>
+                            <input class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" type="file" name="article_document">
                           </div>
 
                           <div class="col-span-full">
                             <label for="body" class="block text-sm font-medium leading-6 text-gray-900">@lang('Body')</label>
                             <div class="mt-2">
-                              <textarea id="body" name="body" rows="3" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">{{ $article->body }}</textarea>
+                              <textarea id="body" name="body" rows="3" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset  @error('body') ring-red-500 @else ring-gray-300 @enderror  placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">{{ $article->body }}</textarea>
+                              @error('body')
+                                    <div class="text-sm text-red-700">{{ $message }}</div>
+                              @enderror
                             </div>
                           </div>
                         </div>

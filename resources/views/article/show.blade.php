@@ -55,7 +55,52 @@
                     <p class="mb-3 text-gray-500 dark:text-gray-400">{{ $article->body }}</p>
                 </div>
                 <div>
-                    <img class="h-auto max-w-full" src="{{ $article->image_url }}" alt="image description">
+                    <img class="h-auto max-w-full" src="{{ Storage::url($article->image_url) }}" alt="image description">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="pb-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="relative overflow-x-auto">
+                    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                            <tr>
+                                <th scope="col" class="px-6 py-3">
+                                    @lang('Disk')
+                                </th>
+
+                                <th scope="col" class="px-6 py-3">
+                                    @lang('Path')
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    @lang('Actions')
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($article->documents as $document)
+                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    {{ $document->disk }}
+                                </th>
+                                <td class="px-6 py-4">
+                                    {{ $document->path }}
+                                </td>
+                                <td class="px-6 py-4">
+                                    <a href="{{ route('document.download', $document) }}">@lang('Download')</a>
+                                    <form action="{{ route('document.destroy', $article) }}" method="post">
+                                        @method('delete')
+                                        @csrf
+                                        <input type="submit" class="text-red-500 cursor-pointer" value="@lang('Delete')">
+                                    </form>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
