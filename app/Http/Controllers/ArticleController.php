@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Article;
+use App\Models\Category;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -12,11 +13,21 @@ class ArticleController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $articles = Article::all();
 
-        return view('article.index', compact('articles'));
+        $filters = $request->validate([
+            'c' => 'nullable|exists:categories,id',
+        ]);
+
+        if (isset($filters['c'])) {
+            $articles = Category::findOrFail($filters['c'])->articles()->get();
+        } else {
+            $articles = Article::all();
+        }
+
+        $categories = Category::all();
+        return view('article.index', compact('articles', 'categories'));
     }
 
     /**
@@ -120,5 +131,27 @@ class ArticleController extends Controller
         $article->delete();
 
         return redirect()->route('article.index');
+    }
+
+    public function attach(Article $article, Request $request)
+    {
+        $request->validate([
+            'category_id' => 'required|exists:categories,id',
+        ]);
+
+        $article->categories()->attach($request->category_id);
+
+        return back();
+    }
+
+    public function detach(Article $article, Request $request)
+    {
+        $request->validate([
+            'category_id' => 'required|exists:categories,id',
+        ]);
+
+        $article->categories()->detach($request->category_id);
+
+        return back();
     }
 }

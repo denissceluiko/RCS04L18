@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\LandingController;
@@ -26,6 +27,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::resource('article', ArticleController::class);
+    Route::post('article/{article}/attach', [ArticleController::class, 'attach'])->name('article.attach');
+    Route::patch('article/{article}/detach', [ArticleController::class, 'detach'])->name('article.detach');
+    Route::resource('category', CategoryController::class);
     Route::get('download/{document}', [DocumentController::class, 'download'])->name('document.download');
     Route::delete('document/{document}', [DocumentController::class, 'destroy'])->name('document.destroy');
 });

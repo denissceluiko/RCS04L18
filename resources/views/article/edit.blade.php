@@ -57,4 +57,48 @@
             </div>
         </div>
     </div>
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6">
+                    <div>
+                        <form action="{{ route('article.attach', $article) }}" method="post">
+                            @csrf
+                            <div class="col-span-full">
+                                <x-input-label for="name" :value="__('Name')" />
+                                <select name="category_id">
+                                    @forelse ($article->availableCategories() as $category)
+                                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                    @empty
+                                        <option value="" disabled>No categories available</option>
+                                    @endforelse
+                                </select>
+                                <x-input-error :messages="$errors->get('name')" class="mt-2" />
+                                <x-primary-button class="ms-3">
+                                    {{ __('Attach') }}
+                                </x-primary-button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="mt-2">
+                        @forelse ($article->categories as $category)
+                            <div style="background-color: {{ $category->color ?? '#7659fe'}}" class="text-primary text-sm font-medium me-2 px-2.5 py-0.5 rounded inline">
+                                <span>{{ $category->name }}</span>
+                                <span>
+                                    <form action="{{ route('article.detach', $article) }}" method="post" class="inline">
+                                        @csrf
+                                        @method('patch')
+                                        <input type="hidden" name="category_id" value="{{ $category->id }}">
+                                        <input type="submit" value="x" class="cursor-pointer">
+                                    </form>
+                                </span>
+                            </div>
+                        @empty
+                            <span>@lang('Article has no categories assigned')</span>
+                        @endforelse
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </x-app-layout>
