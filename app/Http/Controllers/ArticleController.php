@@ -95,7 +95,7 @@ class ArticleController extends Controller
 
         $article->update([
             'title' => $request->get('title'),
-            'image_url' => $path ?? '',
+            'image_url' => $path ?? $article->image_url,
             'body' => $request->get('body'),
         ]);
 

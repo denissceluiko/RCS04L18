@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Article;
 use App\Models\Comment;
 use Illuminate\Http\Request;
 
@@ -26,9 +27,16 @@ class CommentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Article $article, Request $request)
     {
-        //
+        $validated = $request->validate([
+            'author' => 'required',
+            'body' => 'required',
+        ]);
+
+        $article->comments()->create($validated);
+
+        return redirect()->route('landing.article', $article->id);
     }
 
     /**

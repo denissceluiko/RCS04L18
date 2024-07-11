@@ -16,4 +16,9 @@ class Article extends Model
     {
         return $this->hasMany(Document::class);
     }
+
+    public function comments(): HasMany
+    {
+        return $this->HasMany(Comment::class);
+    }
 }
