@@ -6,6 +6,7 @@ use App\Models\Article;
 use App\Models\Category;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 
 class ArticleController extends Controller
@@ -15,6 +16,7 @@ class ArticleController extends Controller
      */
     public function index(Request $request)
     {
+        Gate::authorize('viewAny', Article::class);
 
         $filters = $request->validate([
             'c' => 'nullable|exists:categories,id',
@@ -35,6 +37,8 @@ class ArticleController extends Controller
      */
     public function create()
     {
+        Gate::authorize('update', Article::class);
+
         return view('article.create');
     }
 
@@ -43,6 +47,8 @@ class ArticleController extends Controller
      */
     public function store(Request $request)
     {
+        Gate::authorize('update', Article::class);
+
         $request->validate([
             'title' => 'required|min:15|max:70|unique:articles,title',
             'article_photo' => 'image',
@@ -53,7 +59,7 @@ class ArticleController extends Controller
             $path = $request->article_photo->store('images', 'public');
         }
 
-        Article::create([
+        $request->user()->articles()->create([
             'title' => $request->get('title'),
             'image_url' => $path ?? '',
             'body' => $request->get('body'),
@@ -75,6 +81,8 @@ class ArticleController extends Controller
      */
     public function edit(Article $article)
     {
+        Gate::authorize('update', $article);
+
         return view('article.edit', compact('article'));
     }
 
@@ -83,6 +91,8 @@ class ArticleController extends Controller
      */
     public function update(Request $request, Article $article)
     {
+        Gate::authorize('update', $article);
+
         $request->validate([
             'title' => 'required|min:15|max:70|unique:articles,title,'.$article->id,
             'article_photo' => 'image',
@@ -118,6 +128,8 @@ class ArticleController extends Controller
      */
     public function destroy(Article $article)
     {
+        Gate::authorize('destroy', $article);
+
         foreach($article->documents as $document)
         {
             if (Storage::disk($document->disk)->exists($document->path)) {
@@ -135,6 +147,8 @@ class ArticleController extends Controller
 
     public function attach(Article $article, Request $request)
     {
+        Gate::authorize('update', $article);
+
         $request->validate([
             'category_id' => 'required|exists:categories,id',
         ]);
@@ -146,6 +160,8 @@ class ArticleController extends Controller
 
     public function detach(Article $article, Request $request)
     {
+        Gate::authorize('update', $article);
+
         $request->validate([
             'category_id' => 'required|exists:categories,id',
         ]);

@@ -9,7 +9,9 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100 flex items-center justify-end gap-x-6">
-                    <a href="{{ route('category.create') }}"><x-primary-button>@lang('Create')</x-primary-button></a>
+                    @can ('manage categories')
+                        <a href="{{ route('category.create') }}"><x-primary-button>@lang('Create')</x-primary-button></a>
+                    @endcan
                 </div>
             </div>
         </div>
@@ -44,11 +46,13 @@
                                 </td>
                                 <td class="px-6 py-4">
                                     {{-- <a href="{{ route('category.edit', $article) }}">@lang('Edit')</a> --}}
+                                    @can('manage categories')
                                     <form action="{{ route('category.destroy', $category) }}" method="post">
                                         @method('delete')
                                         @csrf
                                         <input type="submit" class="text-red-500 cursor-pointer" value="@lang('Delete')">
                                     </form>
+                                    @endcan
                                 </td>
                             </tr>
                             @endforeach

@@ -38,7 +38,7 @@
                                     @lang('Categories')
                                 </th>
                                 <th scope="col" class="px-6 py-3">
-                                    @lang('Excerpt')
+                                    @lang('Author')
                                 </th>
                                 <th scope="col" class="px-6 py-3">
                                     @lang('Actions')
@@ -57,16 +57,18 @@
                                     @endforeach
                                 </td>
                                 <td class="px-6 py-4">
-                                    {{ $article->body }}
+                                    {{ $article->author->name }}
                                 </td>
                                 <td class="px-6 py-4">
                                     <a href="{{ route('article.show', $article) }}">@lang('View')</a>
-                                    <a href="{{ route('article.edit', $article) }}">@lang('Edit')</a>
+                                    @can('update', $article)<a href="{{ route('article.edit', $article) }}">@lang('Edit')</a>@endcan
+                                    @can('delete', $article)
                                     <form action="{{ route('article.destroy', $article) }}" method="post">
                                         @method('delete')
                                         @csrf
                                         <input type="submit" class="text-red-500 cursor-pointer" value="@lang('Delete')">
                                     </form>
+                                    @endcan
                                 </td>
                             </tr>
                             @endforeach
