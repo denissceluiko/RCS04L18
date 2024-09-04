@@ -11,6 +11,66 @@
         <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
 
         <!-- Styles -->
+        <script>
+
+            let dqdqwdqw = 'labs saturs';
+            var r = `sxasxt ${dqdqwdqw}`;
+            console.log(r);
+
+            let arr = [1,2,4,5,6, 'qwsqwedrew', Number.MAX_SAFE_INTEGER, 60n];
+            const arr2 = [1,2,4,5,6, 'qwsqwedrew', Number.MAX_SAFE_INTEGER, 60n]; //+ - * / %
+
+            console.log(arr);
+
+            function sum(a, b)
+            {
+                return a+b;
+            }
+
+            for (let i=0; i<10; i++) {
+                if (i == 5) {
+                    break;
+                }
+
+                console.log(sum(145, i));
+
+            }
+
+            let o = {
+                'a': 3,
+                'b': 'vārds',
+                'c': 45,
+                'd': function(a, b) {
+                     return a+b+this.c;
+                },
+                'e': {
+                    z: 'a',
+                    y: '8',
+                    w: function(a, b) {
+                        return parseInt(a+b+this.y);
+                    }
+                }
+            };
+
+            console.log(o);
+
+
+            // let i=0;
+            // while(i<10) {
+            //     console.log(i);
+            //     i++;
+            // }
+
+
+            if (1 > 2) {
+                console.log('1>2');
+            } else if (2 > 1) {
+                console.log('2>1');
+            } else {
+                console.log('1==2');
+
+            }
+        </script>
 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>

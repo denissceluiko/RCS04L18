@@ -6,6 +6,7 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\ProfileController;
+use App\Livewire\Counter;
 use Illuminate\Support\Facades\Route;
 
 // Route::get('/', function () {
@@ -15,7 +16,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [LandingController::class, 'index']);
 Route::get('/post/{article}', [LandingController::class, 'article'])->name('landing.article');
 Route::post('/post/{article}/comment', [CommentController::class, 'store'])->name('comment.store');
-
 
 Route::get('/dashboard', function () {
     return view('dashboard');

@@ -21,6 +21,7 @@
                     <x-nav-link :href="route('category.index')" :active="request()->routeIs('category.index')">
                         {{ __('Categories') }}
                     </x-nav-link>
+                    <livewire:counter />
                 </div>
             </div>
 
